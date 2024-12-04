@@ -1,0 +1,45 @@
+--  таблицы Пользователи
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+--  таблицы Продавцы
+CREATE TABLE sellers (
+    id SERIAL PRIMARY KEY,
+    company_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+--  таблицы Товары
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    seller_id INT NOT NULL,
+    FOREIGN KEY (seller_id) REFERENCES sellers (id) ON DELETE CASCADE
+);
+
+-- таблицы Заказы
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);
+
+-- таблицы Элементы заказа
+CREATE TABLE order_items (
+    id SERIAL PRIMARY KEY,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
+);
